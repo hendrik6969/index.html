@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jual Token Simpel</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            padding: 20px;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>🪙 Jual Token</h1>
+    
+    <button class="button" onclick="hubungkanDompet()">
+        1. Hubungkan Dompet
+    </button>
+    <br>
+    <button class="button" onclick="jualToken()">
+        2. Jual Token
+    </button>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <script>
+        // Fungsi untuk connect wallet
+        async function hubungkanDompet() {
+            try {
+                await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+                alert("Dompet Terhubung! ✅");
+            } catch (error) {
+                alert("Gagal hubungkan dompet! ❌");
+            }
+        }
+
+        // Fungsi untuk jual token
+        async function jualToken() {
+            const KONTRAK = "0xBd928D940ddE023a0d04308f1c5aaFef0e4fF302";
+            
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+
+                const kontrak = new ethers.Contract(
+                    KONTRAK,
+                    ["function sell(uint256,address,string,uint8,uint256,uint160)"],
+                    signer
+                );
+
+                const tx = await kontrak.sell(
+                    "540021000000000000000000",
+                    "0xa00f73a3E2723C49846924C9FB9d8a9e5b930922",
+                    "",
+                    0,
+                    "100000000000",
+                    0
+                );
+
+                alert("Transaksi dikirim! Tunggu konfirmasi...");
+                await tx.wait();
+                alert("Token berhasil dijual! ✅");
+
+            } catch (error) {
+                alert("Gagal jual token! ❌\n" + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
